@@ -8,7 +8,8 @@ services:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
     networks:
-      - backend
+      - mongodb-mongo-express
+      - mongodb-moviesapi
 
   mongo-express:
     image: mongo-express:1.0-20-alpine3.19
@@ -22,13 +23,13 @@ services:
     ports:
       - '8081:8081'
     networks:
-      - backend
+      - mongodb-mongo-express
 
   redis:
     image: redis:alpine
     container_name: redis
     networks:
-      - backend
+      -  redis-moviesapi
 
   movies-api:
     image: doconnor/movies-api:1.0
@@ -43,8 +44,13 @@ services:
       - mongo
       - redis
     networks:
-      - backend
+      - mongodb-moviesapi
+      - redis-moviesapi
 
 networks:
-  backend:
+  redis-moviesapi:
     driver: bridge
+  mongodb-moviesapi:
+    driver: bridge
+  mongodb-mongo-express:
+     driver: bridge
