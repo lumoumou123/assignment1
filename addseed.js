@@ -1,7 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://admin:password@mongo:27017';
 const moviesData = [
-{
+  {
     "overview": "After a shipwreck, an intelligent robot called Roz is stranded on an uninhabited island. To survive the harsh environment, Roz bonds with the island's animals and cares for an orphaned baby goose.",
     "popularity": 4473.701,
     "genre": "Drama",
@@ -122,19 +122,21 @@ const moviesData = [
     "name": "Trouble"
   }
 ];
-MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, db) => {
-    if (err) {
-      console.error('An error occurred connecting to MongoDB: ', err);
+MongoClient.connect(url, (err, client) => {
+  if (err) {
+      console.error('An error occurred connecting to MongoDB:', err);
       return;
-    }
-  
-    const dbo = db.db("movies_database"); // 选择或创建数据库
-    dbo.collection("movies").insertMany(moviesData, (err, result) => {
+  }
+
+  const db = client.db(dbName);
+  const collection = db.collection('movies.movie');
+
+  collection.insertMany(moviesData, (err, result) => {
       if (err) {
-        console.error('An error occurred inserting the data: ', err);
-      } else {
-        console.log(`Inserted ${result.insertedCount} documents into the collection.`);
+          console.error('An error occurred inserting the data:', err);
       }
-      db.close(); // 关闭数据库连接
-    });
+      client.close();
   });
+});
+
+
